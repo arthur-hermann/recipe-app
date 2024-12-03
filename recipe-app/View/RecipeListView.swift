@@ -7,14 +7,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class RecipeListView: UIViewController {
     let viewModel = RecipeListViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-
 }
 

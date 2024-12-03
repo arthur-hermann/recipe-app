@@ -5,7 +5,6 @@
 //  Created by Arthur Hermann on 27/11/2024.
 //
 
-import Foundation
 import UIKit
 
 final class RecipeListViewModel {
@@ -32,7 +31,6 @@ final class RecipeListViewModel {
         catch  {
             RecipeError.parsingError
         }
-        
         return recipes
     }
     
@@ -72,5 +70,4 @@ final class RecipeListViewModel {
             }
         }.resume()
     }
-   
 }
