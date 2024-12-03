@@ -28,14 +28,13 @@ class ViewController: UIViewController {
         return collectionView
     }()
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBlue
         self.setupUI()
 
         for _ in 0...100 {
-            images.append(UIImage(named: "estonia")!)
+            images.append(UIImage(named: "germany")!)
         }
  
         self.collectionView.dataSource = self
@@ -81,8 +80,23 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.configure(with: image)
         return cell
     }
+   
+    }
+
+extension ViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let size = (self.view.frame.width/3) - 1.34
+        return CGSize(width: size, height: size)
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+  
 }
 
 
