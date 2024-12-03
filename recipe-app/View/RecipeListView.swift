@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    let vm = RecipeListViewModel()
+    let viewModel = RecipeListViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -9,6 +9,6 @@ import Foundation
 struct Recipe: Codable {
     let id: Int
     var title: String
-    var image: String
+    var image: String?
     var imageType: String
 }

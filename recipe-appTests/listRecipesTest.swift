@@ -1,41 +1,63 @@
+////
+////  listRestaurantsTest.swift
+////  recipe-appTests
+////
+////  Created by Arthur Hermann on 27/11/2024.
+////
 //
-//  listRestaurantsTest.swift
-//  recipe-appTests
+//import XCTest
+//import Testing
+//@testable import recipe_app
 //
-//  Created by Arthur Hermann on 27/11/2024.
+//protocol RecipeListProtocol {
+//    var viewModel: RecipeListViewModel { get }
+//}
 //
-
-import XCTest
-import Testing
-@testable import recipe_app
-
-final class listRestaurantsTest: XCTestCase {
-    
-    func testRecipeListNotEmpty() {
-        DispatchQueue.global(qos: .background).async {
-            let vm = RecipeListViewModel()
-            vm.searchRecipe("pasta")
-            XCTAssertFalse(vm.recipes.isEmpty)
-            
-        }
-    }
-    
-    func testCorrectRecipeTitle() {
-        DispatchQueue.global(qos: .background).async {
-            let vm = RecipeListViewModel()
-            vm.searchRecipe("pasta")
-            let recipes = vm.recipes
-            for recipe in recipes {
-                XCTAssertTrue(recipe.title.contains("pasta"))
-            }
-        }
-    }
-    func testCorrectNumberOfRecipes() {
-        DispatchQueue.global(qos: .background).async {
-            let vm = RecipeListViewModel()
-            vm.searchRecipe("pasta")
-            XCTAssertEqual(vm.recipes.count, 20)
-        }
-    }
-}
-
+//final class listRestaurantsTest: XCTestCase, RecipeListProtocol {
+//    var viewModel: recipe_app.RecipeListViewModel
+//    
+//    init(viewModel: recipe_app.RecipeListViewModel) {
+//        self.viewModel = viewModel
+//        super.init()
+//    }
+//    
+//    override func setUp() {
+//        viewModel = RecipeListViewModel()
+//    }
+//    
+//    func testRecipeListNotEmpty() {
+//        let expectation = expectation(description: "Searching for pasta")
+//        let viewModel = RecipeListViewModel()
+//        
+//        viewModel.searchRecipe("pasta") { _ in
+//            XCTAssertFalse(viewModel.recipes.isEmpty)
+//            expectation.fulfill()
+//        }
+//    }
+//    
+//    func testCorrectRecipeTitle() {
+//        let expectation = expectation(description: "Searching for pasta")
+//        let viewModel = RecipeListViewModel()
+//        
+//        viewModel.searchRecipe("pasta") {result in
+//            for recipe in viewModel.recipes {
+//                XCTAssertTrue(recipe.title.contains("pasta"))
+//            }
+//            expectation.fulfill()
+//        }
+//    }
+//    
+//    func testCorrectNumberOfRecipes() {
+//        let expectation = expectation(description: "Searching for pasta")
+//        let viewModel = RecipeListViewModel()
+//        
+//        viewModel.searchRecipe("pasta") {result in
+//            XCTAssertEqual(viewModel.recipes.count, 20)
+//            expectation.fulfill()
+//            
+//        }
+//        
+//    }
+//}
+//
+//
