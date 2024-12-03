@@ -10,7 +10,7 @@ import UIKit
 final class RecipeListViewModel {
     private let apiKey = "5b91aa819e6d4bc8848f4c972103e6dc"
     var recipes = [Recipe]()
-  
+    
     func searchRecipe(_ query: String,
                       completion: @escaping (Result<[Recipe], Error>) -> Void)  {
         guard let url = makeURL(query: query) else {
@@ -44,30 +44,30 @@ final class RecipeListViewModel {
         }.resume()
     }
 }
-        
-        //MARK: - Helpers
-        extension RecipeListViewModel {
-            private func makeURL(query: String) -> URL? {
-                var components = URLComponents(string: "https://api.spoonacular.com/recipes/complexSearch")
-                components?.queryItems = [
-                    URLQueryItem(name: "apiKey", value: apiKey),
-                    URLQueryItem(name: "query", value: query),
-                    URLQueryItem(name: "number", value: "20")
-                ]
-                return components?.url
-            }
-            //parses JSON files
-            private func parse(json: Data) throws -> [Recipe] {
-                do {
-                    let decoder = JSONDecoder()
-                    let jsonRecipes = try decoder.decode(Recipes.self, from: json)
-                    recipes = jsonRecipes.results
-                    
-                }
-                catch  {
-                    RecipeError.parsingError
-                }
-                return recipes
-            }
+
+//MARK: - Helpers
+extension RecipeListViewModel {
+    private func makeURL(query: String) -> URL? {
+        var components = URLComponents(string: "https://api.spoonacular.com/recipes/complexSearch")
+        components?.queryItems = [
+            URLQueryItem(name: "apiKey", value: apiKey),
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "number", value: "20")
+        ]
+        return components?.url
+    }
+    //parses JSON files
+    private func parse(json: Data) throws -> [Recipe] {
+        do {
+            let decoder = JSONDecoder()
+            let jsonRecipes = try decoder.decode(Recipes.self, from: json)
+            recipes = jsonRecipes.results
+            
         }
+        catch  {
+            RecipeError.parsingError
+        }
+        return recipes
+    }
+}
 
