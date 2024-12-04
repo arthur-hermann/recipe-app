@@ -7,12 +7,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class RecipeListViewController: UIViewController {
     
-    var images: [UIImage] = []
+    var recipeListViewModel = RecipeListViewModel()
     
     let searchBar: UISearchBar = {
-      let searchBar = UISearchBar()
+        let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
         searchBar.tintColor = .blue
         searchBar.searchBarStyle = .default
@@ -27,19 +27,25 @@ class ViewController: UIViewController {
         collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
         return collectionView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBlue
-        self.setupUI()
-
-        for _ in 0...100 {
-            images.append(UIImage(named: "germany")!)
+        
+        recipeListViewModel.searchRecipe("") { result in
+            switch result {
+            case .success(let recipes):
+                self.collectionView.reloadData()
+                self.recipeListViewModel.fetchImages("")
+            case .failure(let error):
+                print(error)
+            }
         }
- 
+        
+        self.setupUI()
+        
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-
     }
     
     func setupUI() {
@@ -56,19 +62,23 @@ class ViewController: UIViewController {
             searchBar.bottomAnchor.constraint(equalTo: collectionView.topAnchor),
             searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-        
+            
             collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
         ])
+        
+        
+        
     }
-    
 }
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
+
+extension RecipeListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.images.count
+        return recipeListViewModel.images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -76,14 +86,13 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
             fatalError("Failed to dequeue CustomCollectionViewCell in ViewController")
         }
         
-        let image = self.images[indexPath.row]
+        let image = recipeListViewModel.images[indexPath.row]
         cell.configure(with: image)
         return cell
     }
-   
-    }
+}
 
-extension ViewController: UICollectionViewDelegateFlowLayout {
+extension RecipeListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let size = (self.view.frame.width/3) - 1.34
         return CGSize(width: size, height: size)
@@ -96,7 +105,4 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 2
     }
-  
 }
-
-

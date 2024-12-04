@@ -8,8 +8,8 @@
 import UIKit
 
 final class RecipeListViewModel {
-    private let apiKey = "5b91aa819e6d4bc8848f4c972103e6dc"
     var recipes = [Recipe]()
+    var images: [UIImage] = []
     
     func searchRecipe(_ query: String,
                       completion: @escaping (Result<[Recipe], Error>) -> Void)  {
@@ -20,7 +20,7 @@ final class RecipeListViewModel {
         let session = URLSession.shared
         session.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self else { return }
-            if let error = error {
+            if let _ = error {
                 completion(.failure(RecipeError.networkError))
                 return
             }
@@ -50,7 +50,7 @@ extension RecipeListViewModel {
     private func makeURL(query: String) -> URL? {
         var components = URLComponents(string: "https://api.spoonacular.com/recipes/complexSearch")
         components?.queryItems = [
-            URLQueryItem(name: "apiKey", value: apiKey),
+            URLQueryItem(name: "apiKey", value: "d71eab7547c442199b0231aefdc871a7"),
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "number", value: "20")
         ]
@@ -61,13 +61,41 @@ extension RecipeListViewModel {
         do {
             let decoder = JSONDecoder()
             let jsonRecipes = try decoder.decode(Recipes.self, from: json)
-            recipes = jsonRecipes.results
-            
+            self.recipes = jsonRecipes.results
         }
         catch  {
             RecipeError.parsingError
         }
         return recipes
+    }
+    
+    func fetchImages(_ query: String) {
+        for recipe in recipes {
+            guard let imageURL = recipe.image else {
+                RecipeError.invalidURL
+                return
+            }
+            
+            guard let url = URL(string: imageURL) else {
+                RecipeError.invalidURL
+                return
+            }
+            
+            let session = URLSession.shared
+            session.dataTask(with: url) { [weak self] data, response, error in
+                guard let data = data else {
+                    RecipeError.parsingError
+                    return
+                }
+                guard let image = try? UIImage(data: data)! else {
+                    RecipeError.parsingError
+                    return
+                }
+                self?.images.append(image)
+            }.resume()
+            
+        }
+
     }
 }
 

@@ -7,27 +7,20 @@
 
 import UIKit
 
-class CustomCollectionViewCell: UICollectionViewCell {
+final class CustomCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "CustomCollectionViewCell"
     
     let myImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
-        iv.image = UIImage(systemName: "image")
-        iv.tintColor = .white
-        iv.clipsToBounds = true
-        return iv
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(systemName: "image")
+        imageView.tintColor = .white
+        imageView.clipsToBounds = true
+        return imageView
     }()
     
-    func configure(with image: UIImage) {
-        self.myImageView.image = image
-        self.setUp()
-        
-    }
-    
     func setUp() {
-        self.backgroundColor = .systemRed
         
         self.addSubview(myImageView)
         myImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -45,5 +38,13 @@ class CustomCollectionViewCell: UICollectionViewCell {
             self.myImageView.image = nil
         }
     }
+
+//MARK: - Helpers
+extension CustomCollectionViewCell {
+     func configure(with image: UIImage) {
+        self.myImageView.image = image
+        self.setUp()
+    }
+}
     
 
