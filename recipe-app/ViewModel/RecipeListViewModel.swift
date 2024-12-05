@@ -17,6 +17,7 @@ final class RecipeListViewModel {
             completion(.failure(RecipeError.networkError))
             return
         }
+        
         let session = URLSession.shared
         session.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self else { return }
@@ -52,7 +53,7 @@ extension RecipeListViewModel {
         components?.queryItems = [
             URLQueryItem(name: "apiKey", value: "d71eab7547c442199b0231aefdc871a7"),
             URLQueryItem(name: "query", value: query),
-            URLQueryItem(name: "number", value: "20")
+            URLQueryItem(name: "number", value: "5")
         ]
         return components?.url
     }
@@ -63,39 +64,33 @@ extension RecipeListViewModel {
             let jsonRecipes = try decoder.decode(Recipes.self, from: json)
             self.recipes = jsonRecipes.results
         }
-        catch  {
+        catch {
             RecipeError.parsingError
         }
         return recipes
     }
     
-    func fetchImages(_ query: String) {
-        for recipe in recipes {
-            guard let imageURL = recipe.image else {
-                RecipeError.invalidURL
-                return
-            }
-            
-            guard let url = URL(string: imageURL) else {
-                RecipeError.invalidURL
-                return
-            }
-            
-            let session = URLSession.shared
-            session.dataTask(with: url) { [weak self] data, response, error in
-                guard let data = data else {
-                    RecipeError.parsingError
-                    return
-                }
-                guard let image = try? UIImage(data: data)! else {
-                    RecipeError.parsingError
-                    return
-                }
-                self?.images.append(image)
-            }.resume()
-            
-        }
-
-    }
+    func fetchImages(_ query: String, completion: @escaping () -> Void) {
+         var fetchedImages: [UIImage] = []
+        for (_, recipe) in recipes.enumerated() {
+           guard let imageURL = recipe.image else { continue }
+           guard let url = URL(string: imageURL) else {
+             continue
+           }
+           let session = URLSession.shared
+           session.dataTask(with: url) { [weak self] data, response, error in
+             guard let data = data, let image = UIImage(data: data) else {
+               return
+             }
+             fetchedImages.append(image)
+             if fetchedImages.count == self?.recipes.count {
+               self?.images = fetchedImages
+               DispatchQueue.main.async {
+                 completion()
+               }
+             }
+           }.resume()
+         }
+       }
 }
 

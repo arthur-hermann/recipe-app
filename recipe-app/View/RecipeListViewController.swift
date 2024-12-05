@@ -34,16 +34,18 @@ final class RecipeListViewController: UIViewController {
         
         recipeListViewModel.searchRecipe("") { result in
             switch result {
-            case .success(let recipes):
+            case .success(_):
                 self.collectionView.reloadData()
-                self.recipeListViewModel.fetchImages("")
+                self.recipeListViewModel.fetchImages(""){
+                    self.collectionView.reloadData()
+                }
+                
             case .failure(let error):
                 print(error)
             }
         }
         
         self.setupUI()
-        
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
@@ -53,6 +55,7 @@ final class RecipeListViewController: UIViewController {
         self.view.backgroundColor = .systemMint
         self.view.addSubview(collectionView)
         self.view.addSubview(searchBar)
+        
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -68,13 +71,14 @@ final class RecipeListViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
         ])
-        
-        
-        
     }
 }
 
-
+extension RecipeListViewController {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("Pressed item \(recipeListViewModel.recipes[indexPath.row].title)")
+    }
+}
 
 extension RecipeListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

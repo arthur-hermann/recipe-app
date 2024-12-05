@@ -21,7 +21,6 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     }()
     
     func setUp() {
-        
         self.addSubview(myImageView)
         myImageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -34,17 +33,17 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-            super.prepareForReuse()
-            self.myImageView.image = nil
-        }
+        super.prepareForReuse()
+        self.myImageView.image = nil
     }
+}
 
 //MARK: - Helpers
 extension CustomCollectionViewCell {
-     func configure(with image: UIImage) {
+    func configure(with image: UIImage) {
         self.myImageView.image = image
         self.setUp()
     }
 }
-    
+
 
