@@ -10,5 +10,7 @@ struct Recipe: Codable {
     let id: Int
     var title: String
     var image: String?
-    var imageType: String
+    var imageType: String?
+    let summary: String?
+    let instructions: String?
 }

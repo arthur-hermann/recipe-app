@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct Metric: Codable {
+    let amount: Double
+    let unitShort, unitLong: String
+}

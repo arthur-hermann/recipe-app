@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  RecipeListViewController.swift
 //  recipe-app
 //
 //  Created by Arthur Hermann on 27/11/2024.
@@ -9,9 +9,9 @@ import UIKit
 
 final class RecipeListViewController: UIViewController {
     
-    var recipeListViewModel = RecipeListViewModel()
+    private var recipeListViewModel = RecipeListViewModel()
     
-    let searchBar: UISearchBar = {
+    private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
         searchBar.tintColor = .blue
@@ -19,12 +19,14 @@ final class RecipeListViewController: UIViewController {
         return searchBar
     }()
     
-    let collectionView: UICollectionView = {
+    private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
+        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         return collectionView
     }()
     
@@ -36,29 +38,27 @@ final class RecipeListViewController: UIViewController {
             switch result {
             case .success(_):
                 self.collectionView.reloadData()
-                self.recipeListViewModel.fetchImages(""){
-                    self.collectionView.reloadData()
-                }
                 
             case .failure(let error):
                 print(error)
             }
         }
         
-        self.setupUI()
+        self.setUp()
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+
     }
     
-    func setupUI() {
-        
+    private func setUp() {
         self.view.backgroundColor = .systemMint
         self.view.addSubview(collectionView)
         self.view.addSubview(searchBar)
-        
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+        configureConstraints()
+    }
+
+    private func configureConstraints() {
         NSLayoutConstraint.activate([
             
             searchBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -77,8 +77,12 @@ final class RecipeListViewController: UIViewController {
 extension RecipeListViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Pressed item \(recipeListViewModel.recipes[indexPath.row].title)")
+        print("with ID: \(recipeListViewModel.recipes[indexPath.row].id)")
+        let recipeDetailViewController = RecipeDetailViewController(recipe: recipeListViewModel.recipes[indexPath.row])
+        recipeDetailViewController.modalPresentationStyle = .pageSheet
+        present(recipeDetailViewController, animated: true)
+        }
     }
-}
 
 extension RecipeListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -90,8 +94,8 @@ extension RecipeListViewController: UICollectionViewDelegate, UICollectionViewDa
             fatalError("Failed to dequeue CustomCollectionViewCell in ViewController")
         }
         
-        let image = recipeListViewModel.images[indexPath.row]
-        cell.configure(with: image)
+        let url = recipeListViewModel.images[indexPath.row]
+        cell.configure(with: url)
         return cell
     }
 }
@@ -110,3 +114,5 @@ extension RecipeListViewController: UICollectionViewDelegateFlowLayout {
         return 2
     }
 }
+
+

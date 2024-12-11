@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct RecipeDetails: Codable {
+    var results: [RecipeDetail]
+}

@@ -8,8 +8,6 @@
 import Foundation
 
 struct Measures: Codable {
-    let amount: Double
-    let unitLong: String
-    let unitShort: String
-    
+    let us: Metric
+    let metric: Metric
 }
