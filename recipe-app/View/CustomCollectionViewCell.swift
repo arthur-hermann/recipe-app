@@ -48,5 +48,3 @@ extension CustomCollectionViewCell {
         self.setUp()
     }
 }
-
-

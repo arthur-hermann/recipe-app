@@ -11,11 +11,11 @@ import UIKit
 final class RecipeDetailViewModel {
     private var recipeImage = UIImage()
     private var recipeDescription: String = ""
-     var recipeDetail = RecipeDetail(id: 0, title: "", vegetarian: false, vegan: false, glutenFree: false, dairyFree: false, preparationMinutes: 0, cookingMinutes: 0, pricePerServing: 0, extendedIngredients: [], readyInMinutes: 0, servings: 0, dishTypes: [], diets: [], occasions: [], instructions: "", analyzedInstructions: []) //I dont use this but xcode complains if I don't initialise recipeDetail.
-
+    var recipeDetail = RecipeDetail(id: 0, title: "", vegetarian: false, vegan: false, glutenFree: false, dairyFree: false, preparationMinutes: 0, cookingMinutes: 0, pricePerServing: 0, extendedIngredients: [], readyInMinutes: 0, servings: 0, dishTypes: [], diets: [], occasions: [], instructions: "", analyzedInstructions: []) //I dont use this but xcode complains if I don't initialise recipeDetail.
     
-     func requestRecipeIngredients(recipeID: Int,
-                      completion: @escaping (Result<RecipeDetail, Error>) -> Void)  {
+    
+    func requestRecipeIngredients(recipeID: Int,
+                                  completion: @escaping (Result<RecipeDetail, Error>) -> Void)  {
         guard let url = makeURL(recipeID: recipeID) else {
             completion(.failure(RecipeError.networkError))
             return
@@ -60,7 +60,7 @@ extension RecipeDetailViewModel {
         ]
         return components?.url
     }
-   
+    
 }
 
 enum JSONDecoderHelper {
@@ -70,9 +70,3 @@ enum JSONDecoderHelper {
         return decodedModel
     }
 }
-
-
-
-
-
-

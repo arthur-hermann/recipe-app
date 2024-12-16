@@ -48,7 +48,7 @@ final class RecipeListViewController: UIViewController {
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         searchBar.translatesAutoresizingMaskIntoConstraints = false
-
+        
     }
     
     private func setUp() {
@@ -57,7 +57,7 @@ final class RecipeListViewController: UIViewController {
         self.view.addSubview(searchBar)
         configureConstraints()
     }
-
+    
     private func configureConstraints() {
         NSLayoutConstraint.activate([
             
@@ -79,8 +79,8 @@ extension RecipeListViewController {
         let recipeDetailViewController = RecipeDetailViewController(recipe: recipeListViewModel.recipes[indexPath.row])
         recipeDetailViewController.modalPresentationStyle = .pageSheet
         present(recipeDetailViewController, animated: true)
-        }
     }
+}
 
 extension RecipeListViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -112,5 +112,3 @@ extension RecipeListViewController: UICollectionViewDelegateFlowLayout {
         return 2
     }
 }
-
-

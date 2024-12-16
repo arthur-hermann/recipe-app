@@ -51,7 +51,7 @@ final class RecipeDetailViewController: UIViewController {
                 let imageURL = URL(string: self.recipe.image!)
                 image.load(url: imageURL!)
                 configureLabels()
-
+                
             case .failure(let error):
                 print(error)
             }
@@ -70,7 +70,7 @@ final class RecipeDetailViewController: UIViewController {
         contentView.addSubview(titleLabel)
         contentView.addSubview(ingredientsLabel)
         contentView.addSubview(instructionsLabel)
-
+        
     }
     
     private let scrollView: UIScrollView = {
@@ -96,13 +96,13 @@ final class RecipeDetailViewController: UIViewController {
         titleLabel.textAlignment = .center
         titleLabel.sizeToFit()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
+        
         isVegetarianLabel.text = "Vegetarian: \(String(recipeDetailViewModel.recipeDetail.vegetarian!))"
         isVegetarianLabel.font = UIFont(name: "HelveticaNeue", size: 10)
         isVegetarianLabel.backgroundColor = .blue
         isVegetarianLabel.sizeToFit()
         isVegetarianLabel.translatesAutoresizingMaskIntoConstraints = false
-
+        
         isGlutenFreeLabel.text = "Gluten free: \(String(recipeDetailViewModel.recipeDetail.glutenFree!))"
         isGlutenFreeLabel.font = UIFont(name: "HelveticaNeue", size: 10)
         isGlutenFreeLabel.backgroundColor = .blue
@@ -165,19 +165,5 @@ final class RecipeDetailViewController: UIViewController {
             contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 3),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-    }
-}
-
-extension UIImageView {
-    func load(url: URL) {
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.image = image
-                    }
-                }
-            }
-        }
     }
 }
