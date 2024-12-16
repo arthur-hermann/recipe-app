@@ -11,6 +11,4 @@ struct Recipe: Codable {
     var title: String
     var image: String?
     var imageType: String?
-    let summary: String?
-    let instructions: String?
 }

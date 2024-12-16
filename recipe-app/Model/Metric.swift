@@ -9,5 +9,6 @@ import Foundation
 
 struct Metric: Codable {
     let amount: Double
-    let unitShort, unitLong: String
+    let unitShort: String
+    let unitLong: String
 }

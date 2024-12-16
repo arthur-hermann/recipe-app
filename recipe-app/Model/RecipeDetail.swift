@@ -9,11 +9,19 @@ import Foundation
 struct RecipeDetail: Codable {
     let id: Int
     let title: String
-    let vegetarian, vegan, glutenFree, dairyFree: Bool?
-    let preparationMinutes, cookingMinutes: Double?
-    let pricePerServing: Double
+    let vegetarian: Bool?
+    let vegan: Bool?
+    let glutenFree: Bool?
+    let dairyFree: Bool?
+    let preparationMinutes: Double?
+    let cookingMinutes: Double?
+    let pricePerServing: Double?
     let extendedIngredients: [Ingredient]
-    let readyInMinutes, servings: Int
-    let dishTypes, diets, occasions: [String]
+    let readyInMinutes: Int?
+    let servings: Int?
+    let dishTypes: [String]?
+    let diets: [String]?
+    let occasions: [String]?
     let instructions: String
+    let analyzedInstructions: [AnalyzedInstruction]
 }

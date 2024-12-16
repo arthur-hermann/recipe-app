@@ -76,8 +76,6 @@ final class RecipeListViewController: UIViewController {
 
 extension RecipeListViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Pressed item \(recipeListViewModel.recipes[indexPath.row].title)")
-        print("with ID: \(recipeListViewModel.recipes[indexPath.row].id)")
         let recipeDetailViewController = RecipeDetailViewController(recipe: recipeListViewModel.recipes[indexPath.row])
         recipeDetailViewController.modalPresentationStyle = .pageSheet
         present(recipeDetailViewController, animated: true)

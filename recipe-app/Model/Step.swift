@@ -10,4 +10,7 @@ import Foundation
 struct Step: Codable {
     let number: Int
     let step: String
+    let ingredients: [Ent]
+    let equipment: [Ent]
+    let length: Length?
 }

@@ -9,8 +9,13 @@ import Foundation
 
 struct Ingredient: Codable {
     let id: Int
-    let aisle, image, consistency, name: String
-    let nameClean, original, originalName: String
+    let aisle: String?
+    let image: String
+    let consistency: String?
+    let name: String
+    let nameClean: String
+    let original: String?
+    let originalName: String?
     let amount: Double
     let unit: String
 }

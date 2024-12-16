@@ -11,10 +11,11 @@ import UIKit
 final class RecipeDetailViewModel {
     private var recipeImage = UIImage()
     private var recipeDescription: String = ""
-    private var recipeDetails: [RecipeDetail] = []
+     var recipeDetail = RecipeDetail(id: 0, title: "", vegetarian: false, vegan: false, glutenFree: false, dairyFree: false, preparationMinutes: 0, cookingMinutes: 0, pricePerServing: 0, extendedIngredients: [], readyInMinutes: 0, servings: 0, dishTypes: [], diets: [], occasions: [], instructions: "", analyzedInstructions: []) //I dont use this but xcode complains if I don't initialise recipeDetail.
+
     
-    func requestRecipeIngredients(recipeID: Int,
-                      completion: @escaping (Result<[RecipeDetail], Error>) -> Void)  {
+     func requestRecipeIngredients(recipeID: Int,
+                      completion: @escaping (Result<RecipeDetail, Error>) -> Void)  {
         guard let url = makeURL(recipeID: recipeID) else {
             completion(.failure(RecipeError.networkError))
             return
@@ -36,20 +37,18 @@ final class RecipeDetailViewModel {
                 return
             }
             do {
-                let recipeDetails = try parse(json: data)
+                let recipeDetail: RecipeDetail = try JSONDecoderHelper.parse(json: data)
+                
                 DispatchQueue.main.async {
-                    self.recipeDetails = recipeDetails
-                    completion(.success(recipeDetails))
+                    self.recipeDetail = recipeDetail
+                    completion(.success(recipeDetail))
                 }
             } catch {
                 completion(.failure(RecipeError.parsingError))
             }
         }.resume()
     }
-    
 }
-
-
 //MARK: - Helpers
 extension RecipeDetailViewModel {
     
@@ -57,20 +56,20 @@ extension RecipeDetailViewModel {
         var components = URLComponents(string: "https://api.spoonacular.com/recipes/\(recipeID)/information")
         components?.queryItems = [
             URLQueryItem(name: "apiKey", value: "d71eab7547c442199b0231aefdc871a7"),
+            URLQueryItem(name: "addRecipeInstructions", value: "true")
         ]
         return components?.url
     }
    
-    
-    //parses JSON files
-    private func parse(json: Data) throws -> [RecipeDetail] {
-        let decoder = JSONDecoder()
-        let jsonRecipeDetails = try decoder.decode(RecipeDetails.self, from: json)
-        self.recipeDetails = jsonRecipeDetails.results
-        return recipeDetails
-    }
 }
 
+enum JSONDecoderHelper {
+    static func parse<T: Decodable>(json: Data) throws -> T {
+        let decoder = JSONDecoder()
+        let decodedModel = try decoder.decode(T.self, from: json)
+        return decodedModel
+    }
+}
 
 
 

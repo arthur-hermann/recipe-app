@@ -8,8 +8,8 @@
 import UIKit
 
 final class RecipeListViewModel {
-    var recipes = [Recipe]()
-    var images: [String] = []
+     var recipes = [Recipe]()
+     var images: [String] = []
     
     func searchRecipe(_ query: String,
                       completion: @escaping (Result<[Recipe], Error>) -> Void)  {
@@ -34,11 +34,11 @@ final class RecipeListViewModel {
                 return
             }
             do {
-                let recipes = try parse(json: data)
+                let fetchedItems: Recipes = try JSONDecoderHelper.parse(json: data)
                 DispatchQueue.main.async {
-                    self.recipes = recipes
-                    self.images = recipes.map { $0.image ?? "germany" }
-                    completion(.success(recipes))
+                    self.recipes = fetchedItems.results
+                    self.images = self.recipes.map { $0.image ?? "germany" }
+                    completion(.success(self.recipes))
                 }
             } catch {
                 completion(.failure(RecipeError.parsingError))
@@ -57,14 +57,6 @@ extension RecipeListViewModel {
             URLQueryItem(name: "number", value: "1")
         ]
         return components?.url
-    }
-    
-    //parses JSON files
-    private func parse(json: Data) throws -> [Recipe] {
-        let decoder = JSONDecoder()
-        let jsonRecipes = try decoder.decode(Recipes.self, from: json)
-        self.recipes = jsonRecipes.results
-        return recipes
     }
 }
 
