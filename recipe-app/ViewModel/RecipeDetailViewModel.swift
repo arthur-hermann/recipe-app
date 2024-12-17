@@ -43,6 +43,7 @@ final class RecipeDetailViewModel {
                     self.recipeDetail = recipeDetail
                     completion(.success(recipeDetail))
                 }
+                
             } catch {
                 completion(.failure(RecipeError.parsingError))
             }
@@ -55,7 +56,7 @@ extension RecipeDetailViewModel {
     private func makeURL(recipeID: Int) -> URL? {
         var components = URLComponents(string: "https://api.spoonacular.com/recipes/\(recipeID)/information")
         components?.queryItems = [
-            URLQueryItem(name: "apiKey", value: "d71eab7547c442199b0231aefdc871a7"),
+            URLQueryItem(name: "apiKey", value: "5b91aa819e6d4bc8848f4c972103e6dc"),
             URLQueryItem(name: "addRecipeInstructions", value: "true")
         ]
         return components?.url

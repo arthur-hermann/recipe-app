@@ -10,10 +10,10 @@ import Foundation
 struct Ingredient: Codable {
     let id: Int
     let aisle: String?
-    let image: String
+    let image: String?
     let consistency: String?
     let name: String
-    let nameClean: String
+    let nameClean: String?
     let original: String?
     let originalName: String?
     let amount: Double

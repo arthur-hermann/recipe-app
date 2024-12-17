@@ -13,15 +13,6 @@ final class RecipeDetailViewController: UIViewController {
     private var recipeDetailViewModel = RecipeDetailViewModel()
     private var recipe: Recipe
     
-    //Xcode complains if I don't initialise labels before init.
-    let titleLabel: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
-    let isVegetarianLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-    let isGlutenFreeLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-    let pricePerServingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-    let ingredientsLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-    let instructionsLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-    
-    
     private lazy var image: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .gray
@@ -33,6 +24,43 @@ final class RecipeDetailViewController: UIViewController {
         return imageView
     }()
     
+    private lazy var titleLabel: UILabel = {
+        let titleLabel = UILabel()
+        titleLabel.text = recipe.title
+        titleLabel.font = UIFont(name: "HelveticaNeue", size: 30)
+        titleLabel.backgroundColor = .white
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 0
+        titleLabel.sizeToFit()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        return titleLabel
+    }()
+    
+    private lazy var ingredientsLabel: UILabel = {
+        let ingredientsLabel = UILabel()
+    
+        ingredientsLabel.backgroundColor = .white
+        ingredientsLabel.font = UIFont(name: "HelveticaNeue", size: 20)
+        ingredientsLabel.translatesAutoresizingMaskIntoConstraints = false
+        ingredientsLabel.numberOfLines = 0
+        ingredientsLabel.sizeToFit()
+        
+        return ingredientsLabel
+    }()
+    
+    private lazy var instructionsLabel: UILabel = {
+        let instructionsLabel = UILabel()
+        
+        instructionsLabel.backgroundColor = .white
+        instructionsLabel.font = UIFont(name: "HelveticaNeue", size: 20)
+        instructionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        instructionsLabel.numberOfLines = 0
+        instructionsLabel.sizeToFit()
+        instructionsLabel.textAlignment = .left
+        
+        return instructionsLabel
+    }()
+    
     init(recipe: Recipe) {
         self.recipe = recipe
         super.init(nibName: nil, bundle: nil)
@@ -40,7 +68,7 @@ final class RecipeDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        SetUp()
+        setup()
         configureConstraints()
         recipeDetailViewModel.requestRecipeIngredients(recipeID: recipe.id) { [weak self] result in
             guard let self else {
@@ -62,15 +90,20 @@ final class RecipeDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func SetUp() {
+    private func setup() {
         view.backgroundColor = .white
+        
         view.addSubview(scrollView)
+        
         scrollView.addSubview(contentView)
-        contentView.addSubview(image)
+        
         contentView.addSubview(titleLabel)
+        contentView.addSubview(titleLabel)
+        
+        contentView.addSubview(image)
+        
         contentView.addSubview(ingredientsLabel)
         contentView.addSubview(instructionsLabel)
-        
     }
     
     private let scrollView: UIScrollView = {
@@ -90,80 +123,62 @@ final class RecipeDetailViewController: UIViewController {
     
     private func configureLabels () {
         
-        titleLabel.text = recipe.title
-        titleLabel.font = UIFont(name: "HelveticaNeue", size: 15)
-        titleLabel.backgroundColor = .white
-        titleLabel.textAlignment = .center
-        titleLabel.sizeToFit()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        isVegetarianLabel.text = "Vegetarian: \(String(recipeDetailViewModel.recipeDetail.vegetarian!))"
-        isVegetarianLabel.font = UIFont(name: "HelveticaNeue", size: 10)
-        isVegetarianLabel.backgroundColor = .blue
-        isVegetarianLabel.sizeToFit()
-        isVegetarianLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        isGlutenFreeLabel.text = "Gluten free: \(String(recipeDetailViewModel.recipeDetail.glutenFree!))"
-        isGlutenFreeLabel.font = UIFont(name: "HelveticaNeue", size: 10)
-        isGlutenFreeLabel.backgroundColor = .blue
-        isGlutenFreeLabel.sizeToFit()
-        
         let ingredients = recipeDetailViewModel.recipeDetail.extendedIngredients
+        ingredientsLabel.text = "Ingredients: \n\n"
+        
         for ingredient in ingredients {
-            ingredientsLabel.text = "\(ingredientsLabel.text ?? "") \(Int(round(ingredient.amount))) \(ingredient.unit) \(ingredient.nameClean)\n\n"
+            ingredientsLabel.text = "\(ingredientsLabel.text ?? "") \(Int(round(ingredient.amount))) \(ingredient.unit) \(ingredient.nameClean ?? ingredient.originalName!)\n\n"
         }
         
-        ingredientsLabel.backgroundColor = .white
-        ingredientsLabel.font = UIFont(name: "HelveticaNeue", size: 20)
-        ingredientsLabel.translatesAutoresizingMaskIntoConstraints = false
-        ingredientsLabel.numberOfLines = 0
-        ingredientsLabel.sizeToFit()
-        
+        instructionsLabel.text = "Instructions: \n\n"
+
         let analyzedInstructions = recipeDetailViewModel.recipeDetail.analyzedInstructions
         for step in analyzedInstructions[0].steps {
-            instructionsLabel.text = "\(instructionsLabel.text ?? "") Step \(step.number): \(step.step)\n\n"
+            instructionsLabel.text = "\(instructionsLabel.text ?? "") Step \(step.number):\n\n \(step.step)\n\n"
         }
         
-        instructionsLabel.backgroundColor = .white
-        instructionsLabel.font = UIFont(name: "HelveticaNeue", size: 20)
-        instructionsLabel.translatesAutoresizingMaskIntoConstraints = false
-        instructionsLabel.numberOfLines = 0
-        instructionsLabel.sizeToFit()
     }
     
     private func configureConstraints() {
-        NSLayoutConstraint.activate([
-            
-            titleLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleLabel.bottomAnchor.constraint(equalTo: image.topAnchor, constant: -30),
-            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            
-            image.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 100),
-            image.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            image.widthAnchor.constraint(equalToConstant: 350),
-            image.heightAnchor.constraint(equalToConstant: 300),
-            
-            ingredientsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            ingredientsLabel.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 20),
-            ingredientsLabel.widthAnchor.constraint(equalToConstant: 380),
-            ingredientsLabel.bottomAnchor.constraint(equalTo: instructionsLabel.topAnchor, constant: 50),
-            
-            instructionsLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            instructionsLabel.topAnchor.constraint(equalTo: ingredientsLabel.bottomAnchor, constant: 30),
-            instructionsLabel.widthAnchor.constraint(equalToConstant: 380),
-            instructionsLabel.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -10),
-            
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 3),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-        ])
+        
+        let heightConstraint = contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+        heightConstraint.priority = .defaultLow
+        heightConstraint.isActive = true
+        
+        NSLayoutConstraint.activate(
+            [
+                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                
+                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+                
+                titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+                titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                titleLabel.bottomAnchor.constraint(equalTo: image.topAnchor, constant: -10),
+                
+                image.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+                image.bottomAnchor.constraint(equalTo: ingredientsLabel.topAnchor, constant: -20),
+                image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                
+                ingredientsLabel.topAnchor.constraint(equalTo: image.bottomAnchor),
+                ingredientsLabel.bottomAnchor.constraint(equalTo: instructionsLabel.topAnchor),
+                ingredientsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                ingredientsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                
+                instructionsLabel.topAnchor.constraint(equalTo: ingredientsLabel.bottomAnchor),
+                instructionsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                instructionsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                instructionsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            ]
+        )
+        
     }
 }

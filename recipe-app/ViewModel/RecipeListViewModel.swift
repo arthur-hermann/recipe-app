@@ -11,7 +11,7 @@ final class RecipeListViewModel {
     var recipes = [Recipe]()
     var images: [String] = []
     
-    func searchRecipe(_ query: String,
+    func requestRecipe(_ query: String,
                       completion: @escaping (Result<[Recipe], Error>) -> Void)  {
         guard let url = makeURL(query: query) else {
             completion(.failure(RecipeError.networkError))
@@ -37,7 +37,7 @@ final class RecipeListViewModel {
                 let fetchedItems: Recipes = try JSONDecoderHelper.parse(json: data)
                 DispatchQueue.main.async {
                     self.recipes = fetchedItems.results
-                    self.images = self.recipes.map { $0.image ?? "germany" }
+                    self.images = self.recipes.map { $0.image ?? "" }
                     completion(.success(self.recipes))
                 }
             } catch {
@@ -47,12 +47,13 @@ final class RecipeListViewModel {
     }
 }
 
+
 //MARK: - Helpers
 extension RecipeListViewModel {
     private func makeURL(query: String) -> URL? {
         var components = URLComponents(string: "https://api.spoonacular.com/recipes/complexSearch")
         components?.queryItems = [
-            URLQueryItem(name: "apiKey", value: "d71eab7547c442199b0231aefdc871a7"),
+            URLQueryItem(name: "apiKey", value: "5b91aa819e6d4bc8848f4c972103e6dc"),
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "number", value: "1")
         ]
