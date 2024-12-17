@@ -32,7 +32,7 @@ final class RecipeListViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBlue
         
-        recipeListViewModel.searchRecipe("") { result in
+        recipeListViewModel.requestRecipe("") { result in
             switch result {
             case .success(_):
                 self.collectionView.reloadData()
@@ -55,10 +55,17 @@ final class RecipeListViewController: UIViewController {
         self.view.backgroundColor = .systemMint
         self.view.addSubview(collectionView)
         self.view.addSubview(searchBar)
+        configureConstraints()
+    }
+    
+    private func searchRecipe(query: String) {
+        let recipes = recipeListViewModel.recipes
+        let filteredRecipes = recipes.filter({$0.title.contains(query)})
+        self.collectionView.reloadData()
         
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
+    }
+    
+    private func configureConstraints() {
         NSLayoutConstraint.activate([
             
             searchBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),

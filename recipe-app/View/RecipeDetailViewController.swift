@@ -38,7 +38,7 @@ final class RecipeDetailViewController: UIViewController {
     
     private lazy var ingredientsLabel: UILabel = {
         let ingredientsLabel = UILabel()
-        
+    
         ingredientsLabel.backgroundColor = .white
         ingredientsLabel.font = UIFont(name: "HelveticaNeue", size: 20)
         ingredientsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -131,7 +131,7 @@ final class RecipeDetailViewController: UIViewController {
         }
         
         instructionsLabel.text = "Instructions: \n\n"
-        
+
         let analyzedInstructions = recipeDetailViewModel.recipeDetail.analyzedInstructions
         for step in analyzedInstructions[0].steps {
             instructionsLabel.text = "\(instructionsLabel.text ?? "") Step \(step.number):\n\n \(step.step)\n\n"
