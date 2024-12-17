@@ -12,7 +12,7 @@ final class RecipeListViewModel {
     var images: [String] = []
     
     func requestRecipe(_ query: String,
-                      completion: @escaping (Result<[Recipe], Error>) -> Void)  {
+                       completion: @escaping (Result<[Recipe], Error>) -> Void)  {
         guard let url = makeURL(query: query) else {
             completion(.failure(RecipeError.networkError))
             return
