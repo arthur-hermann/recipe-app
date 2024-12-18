@@ -33,7 +33,6 @@ final class RecipeListViewController: UIViewController {
             switch result {
             case .success(_):
                 self.collectionView.reloadData()
-                
             case .failure(let error):
                 print(error)
             }
@@ -64,7 +63,6 @@ final class RecipeListViewController: UIViewController {
         let recipes = recipeListViewModel.recipes
         let filteredRecipes = recipes.filter({$0.title.contains(query)})
         self.collectionView.reloadData()
-        
     }
     
     private func configureConstraints() {

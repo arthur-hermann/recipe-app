@@ -62,7 +62,6 @@ extension RecipeListViewModel {
         let decoder = JSONDecoder()
         let jsonRecipes = try decoder.decode(Recipes.self, from: json)
         self.recipes = jsonRecipes.results
-        
         return recipes
     }
     
@@ -89,4 +88,3 @@ extension RecipeListViewModel {
         }
     }
 }
-

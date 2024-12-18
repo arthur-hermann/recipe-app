@@ -8,7 +8,6 @@
 import UIKit
 
 final class CustomCollectionViewCell: UICollectionViewCell {
-    
     static let identifier = "CustomCollectionViewCell"
     
     private let imageView: UIImageView = {
@@ -23,7 +22,6 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     func setUp() {
         self.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor),
             imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
@@ -45,5 +43,3 @@ extension CustomCollectionViewCell {
         self.setUp()
     }
 }
-
-
