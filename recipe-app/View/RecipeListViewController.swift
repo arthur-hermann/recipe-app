@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  RecipeListViewController.swift
 //  recipe-app
 //
 //  Created by Arthur Hermann on 27/11/2024.
@@ -9,9 +9,9 @@ import UIKit
 
 final class RecipeListViewController: UIViewController {
     
-    var recipeListViewModel = RecipeListViewModel()
+    private var recipeListViewModel = RecipeListViewModel()
     
-    let searchBar: UISearchBar = {
+    private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
         searchBar.tintColor = .blue
@@ -19,44 +19,46 @@ final class RecipeListViewController: UIViewController {
         return searchBar
     }()
     
-    let collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
-        return collectionView
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBlue
         
-        recipeListViewModel.requestRecipe("") { result in
+        self.setUp()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        requestRecipe()
+    }
+    
+    func requestRecipe() {
+        recipeListViewModel.FetchRecipe("") { result in
             switch result {
             case .success(_):
                 self.collectionView.reloadData()
-                self.recipeListViewModel.fetchImages(""){
-                    self.collectionView.reloadData()
-                }
                 
             case .failure(let error):
                 print(error)
             }
         }
-        
-        self.setupUI()
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
     }
     
-    func setupUI() {
-        
+    private func setUp() {
         self.view.backgroundColor = .systemMint
         self.view.addSubview(collectionView)
         self.view.addSubview(searchBar)
         configureConstraints()
     }
+    
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        return collectionView
+    }()
     
     private func searchRecipe(query: String) {
         let recipes = recipeListViewModel.recipes
@@ -67,7 +69,6 @@ final class RecipeListViewController: UIViewController {
     
     private func configureConstraints() {
         NSLayoutConstraint.activate([
-            
             searchBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             searchBar.bottomAnchor.constraint(equalTo: collectionView.topAnchor),
             searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -83,7 +84,7 @@ final class RecipeListViewController: UIViewController {
 
 extension RecipeListViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Pressed item \(recipeListViewModel.recipes[indexPath.row].title)")
+        
     }
 }
 
@@ -97,8 +98,8 @@ extension RecipeListViewController: UICollectionViewDelegate, UICollectionViewDa
             fatalError("Failed to dequeue CustomCollectionViewCell in ViewController")
         }
         
-        let image = recipeListViewModel.images[indexPath.row]
-        cell.configure(with: image)
+        let url = recipeListViewModel.images[indexPath.row]
+        cell.configure(with: url)
         return cell
     }
 }

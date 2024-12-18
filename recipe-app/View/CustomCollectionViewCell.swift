@@ -11,37 +11,37 @@ final class CustomCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "CustomCollectionViewCell"
     
-    let myImageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.image = UIImage(systemName: "image")
+        imageView.image = UIImage()
         imageView.tintColor = .white
         imageView.clipsToBounds = true
         return imageView
     }()
     
     func setUp() {
-        self.addSubview(myImageView)
-        myImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            myImageView.topAnchor.constraint(equalTo: self.topAnchor),
-            myImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            myImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            myImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
+            imageView.topAnchor.constraint(equalTo: self.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor)
         ])
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.myImageView.image = nil
+        self.imageView.image = nil
     }
 }
 
 //MARK: - Helpers
 extension CustomCollectionViewCell {
     func configure(with image: UIImage) {
-        self.myImageView.image = image
+        self.imageView.image = image
         self.setUp()
     }
 }
